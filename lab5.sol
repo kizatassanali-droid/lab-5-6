@@ -17,7 +17,6 @@ contract Kizatov {
 
     constructor() {
         owner = msg.sender;
-        // ВЫДАЁМ ВСЕ ТОКЕНЫ СОЗДАТЕЛЮ ПРИ ДЕПЛОЕ
         totalSupply = MAX_SUPPLY;
         balanceOf[msg.sender] = MAX_SUPPLY;
         emit Transfer(address(0), msg.sender, MAX_SUPPLY);
@@ -28,8 +27,6 @@ contract Kizatov {
         _;
     }
 
-    // УБИРАЕМ mint — он больше не нужен
-    // ОСТАВЛЯЕМ burn на случай, если захочешь сжечь
     function burn(uint256 amount) external {
         require(balanceOf[msg.sender] >= amount, "Insufficient balance");
         balanceOf[msg.sender] -= amount;
