@@ -6,7 +6,7 @@ contract Kizatov {
     string public symbol = "KZT";
     uint8 public decimals = 18;
     uint256 public totalSupply;
-    uint256 public constant MAX_SUPPLY = 1_000_000 * 10**18; // 1 000 000 токенов
+    uint256 public constant MAX_SUPPLY = 1_000_000 * 10**18;
 
     address public owner;
     mapping(address => uint256) public balanceOf;
@@ -17,6 +17,10 @@ contract Kizatov {
 
     constructor() {
         owner = msg.sender;
+        // ВЫДАЁМ ВСЕ ТОКЕНЫ СОЗДАТЕЛЮ ПРИ ДЕПЛОЕ
+        totalSupply = MAX_SUPPLY;
+        balanceOf[msg.sender] = MAX_SUPPLY;
+        emit Transfer(address(0), msg.sender, MAX_SUPPLY);
     }
 
     modifier onlyOwner() {
@@ -24,13 +28,8 @@ contract Kizatov {
         _;
     }
 
-    function mint(address to, uint256 amount) external onlyOwner {
-        require(totalSupply + amount <= MAX_SUPPLY, "Exceeded max supply");
-        totalSupply += amount;
-        balanceOf[to] += amount;
-        emit Transfer(address(0), to, amount);
-    }
-
+    // УБИРАЕМ mint — он больше не нужен
+    // ОСТАВЛЯЕМ burn на случай, если захочешь сжечь
     function burn(uint256 amount) external {
         require(balanceOf[msg.sender] >= amount, "Insufficient balance");
         balanceOf[msg.sender] -= amount;
